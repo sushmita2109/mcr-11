@@ -1,3 +1,4 @@
+import { useMovie } from "../Context/MovieContext";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
@@ -5,21 +6,11 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
-import { useMovie } from "../Context/MovieContext";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
-export const LandingPage = () => {
-  const { filteredMovies, movieDispatch, movieStates } = useMovie();
-
-  const [star, setStar] = useState();
-
+export const SearchCard = () => {
+  const { SearchedMovies } = useMovie();
   const navigate = useNavigate();
-  const addToStar = (movieId) => {
-    movieDispatch({ type: "ADD_STAR_MOVIES", payload: movieId });
-    movieDispatch({ type: "ADD_STAR_TO_LOCAL_STORAGE" });
-    movieDispatch({ type: "CHANGE_TO_STARRED", payload: movieId });
-  };
   return (
     <Box
       sx={{
@@ -32,11 +23,14 @@ export const LandingPage = () => {
         justifyContent: "center",
       }}
     >
-      {filteredMovies.length > 0 ? (
-        filteredMovies?.map((movie) => (
-          <Card key={movie.id} sx={{ maxWidth: 345 }}>
+      {SearchedMovies.length > 0 ? (
+        SearchedMovies?.map((movie) => (
+          <Card
+            key={movie.id}
+            sx={{ maxWidth: 345 }}
+            onClick={() => navigate(`/moviedetail/${movie.id}`)}
+          >
             <CardMedia
-              onClick={() => navigate(`/moviedetail/${movie.id}`)}
               sx={{ height: 140 }}
               image={movie.imageURL}
               title="movieimage"
@@ -57,9 +51,7 @@ export const LandingPage = () => {
                 padding: "8px",
               }}
             >
-              <Button onClick={() => addToStar(movie.id)}>
-                {movie.starred ? "Starred" : "Star"}
-              </Button>
+              <Button>Star</Button>
               <Button>Add to Watchlist</Button>
             </CardActions>
           </Card>
